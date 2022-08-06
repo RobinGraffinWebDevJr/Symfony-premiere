@@ -1,6 +1,5 @@
 <?php
 require dirname(__DIR__) . '../vendor/autoload.php';
-
 $faker = Faker\Factory::create('fr_FR');
 
 $pdo = Connection::getPDO();
