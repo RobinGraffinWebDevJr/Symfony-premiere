@@ -2,6 +2,8 @@
 namespace App\Controller;
 
 use App\Entity\Propertys;
+use App\Entity\PropertySearch;
+use App\Form\PropertySearchType;
 use App\Repository\PropertysRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -31,18 +33,19 @@ class PropertyController extends AbstractController
      */
     public function index(PaginatorInterface $paginator, Request $request): Response
     {
-        // Créer une entité qui vas représenter notre recherche
-        // Creer un formulaire
-        // Gérer le traitement dans le controleur
+        $search = new PropertySearch();
+        $form = $this->createForm(PropertySearchType::class , $search);
+        $form->handleRequest($request);
 
         $properties = $paginator->paginate(
-            $this->repository->findAllVisibleQuery(),
+            $this->repository->findAllVisibleQuery($search),
             $request->query->getInt('page', 1),
             12
         );
         return $this->render('property/index.html.twig',  [
             'current_menu' => 'properties',
-            'properties' => $properties
+            'properties'   => $properties,
+            'form'         => $form->createView()
         ]);
     }
 
